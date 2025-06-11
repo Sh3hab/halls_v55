@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المدير - حجز قاعات الأفراح</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --primary-light: #63a4ff;
+            --primary-dark: #004ba0;
+            --secondary-color: #388e3c;
+            --background: #f0f4f8;
+            --surface: #ffffff;
+            --error: #d32f2f;
+            --on-primary: #ffffff;
+            --on-secondary: #ffffff;
+            --on-background: #1a237e;
+            --on-surface: #263238;
+            --on-error: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--on-background);
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .admin-dashboard-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+        }
+
+        .app-header {
+            background: var(--primary-color);
+            color: var(--on-primary);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary-light);
+        }
+
+        .user-avatar {
+            background: var(--primary-light);
+            color: var(--on-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .admin-main {
+            display: flex;
+            flex: 1;
+        }
+
+        .admin-nav {
+            background: var(--surface);
+            width: 220px;
+            min-height: 100vh;
+            box-shadow: 0 0 10px #e0e0e0;
+            padding: 2rem 0 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 2rem;
+            cursor: pointer;
+            color: var(--on-surface);
+            transition: background 0.2s, color 0.2s;
+            border-right: 4px solid transparent;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-right: 4px solid var(--primary-color);
+        }
+
+        .nav-item.logout {
+            margin-top: auto;
+            color: var(--error);
+            background: none;
+            border-right: 4px solid transparent;
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+            background: var(--background);
+            min-height: 100vh;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .stats-cards {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #e0e0e0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            min-width: 180px;
+        }
+
+        .stat-card i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+        }
+
+        .stat-number {
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: var(--on-background);
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+
+        .btn.primary {
+            background: var(--primary-color);
+            color: var(--on-primary);
+        }
+
+        .btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn.secondary {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .btn.secondary:hover {
+            background: var(--primary-color);
+            color: var(--on-primary);
+        }
+
+        .btn.danger {
+            background: var(--error);
+            color: var(--on-error);
+        }
+
+        .btn.danger:hover {
+            background: #b71c1c;
+        }
+
+        .btn.btn-sm {
+            padding: 0.3rem 0.7rem;
+            font-size: 0.95rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px #e0e0e0;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 0.9rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .admin-table th {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .status {
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status.available, .status.active {
+            background: #e0f7e9;
+            color: var(--secondary-color);
+        }
+
+        .status.unavailable, .status.inactive, .status.pending {
+            background: #ffeaea;
+            color: var(--error);
+        }
+
+        .status.confirmed {
+            background: #eaf6ff;
+            color: var(--primary-color);
+        }
+
+        .admin-settings-form {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #e0e0e0;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--on-surface);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: var(--background);
+            color: var(--on-background);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #e0e0e0;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+
+        @media (max-width: 900px) {
+            .admin-main {
+                flex-direction: column;
+            }
+            .admin-nav {
+                width: 100%;
+                min-height: unset;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            .admin-content {
+                padding: 1rem;
+            }
+            .stats-cards {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شاشة لوحة تحكم المدير -->
+    <div class="screen admin-dashboard-screen active">
+        <!-- رأس التطبيق -->
+        <div class="app-header">
+            <div class="logo">
+                <i class="fas fa-house"></i>
+                <h1>لوحة تحكم المدير</h1>
+            </div>
+            <div class="user-avatar" id="admin-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </div>
+        <div class="admin-main">
+            <!-- القائمة الجانبية -->
+            <nav class="admin-nav">
+                <div class="nav-item active" data-section="overview">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>نظرة عامة</span>
+                </div>
+                <div class="nav-item" data-section="halls">
+                    <i class="fas fa-building"></i>
+                    <span>إدارة القاعات</span>
+                </div>
+                <div class="nav-item" data-section="bookings">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>الحجوزات</span>
+                </div>
+                <div class="nav-item" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>المستخدمون</span>
+                </div>
+                <div class="nav-item" data-section="reviews">
+                    <i class="fas fa-star"></i>
+                    <span>المراجعات</span>
+                </div>
+                <div class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>الإعدادات</span>
+                </div>
+                <div class="nav-item logout" id="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </div>
+            </nav>
+            <!-- محتوى لوحة التحكم -->
+            <main class="admin-content">
+                <!-- نظرة عامة -->
+                <section class="admin-section overview-section active">
+                    <h2>نظرة عامة</h2>
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <i class="fas fa-building"></i>
+                            <div>
+                                <span class="stat-number" id="total-halls">12</span>
+                                <span class="stat-label">عدد القاعات</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-number" id="total-bookings">54</span>
+                                <span class="stat-label">عدد الحجوزات</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <span class="stat-number" id="total-users">120</span>
+                                <span class="stat-label">عدد المستخدمين</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <span class="stat-number" id="total-reviews">230</span>
+                                <span class="stat-label">عدد المراجعات</span>
+                            </div>
+                        </div>
+                       <div class="chart-container">
+                            <canvas id="dashboardChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+                <!-- إدارة القاعات -->
+                <section class="admin-section halls-section">
+                    <div class="section-header">
+                        <h2>إدارة القاعات</h2>
+                        <button class="btn primary" id="add-hall-btn">
+                            <i class="fas fa-plus"></i> إضافة قاعة
+                        </button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الموقع</th>
+                                <th>السعر</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="halls-table-body">
+                            <tr>
+                                <td>قاعة الملكية</td>
+                                <td>صنعاء</td>
+                                <td>1,500 ر.س</td>
+                                <td><span class="status available">متاحة</span></td>
+                                <td>
+                                    <button class="btn secondary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>قاعة النخبة</td>
+                                <td>عدن</td>
+                                <td>2,000 ر.س</td>
+                                <td><span class="status unavailable">محجوزة</span></td>
+                                <td>
+                                    <button class="btn secondary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <!-- إدارة الحجوزات -->
+                <section class="admin-section bookings-section">
+                    <h2>إدارة الحجوزات</h2>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>اسم القاعة</th>
+                                <th>المستخدم</th>
+                                <th>التاريخ</th>
+                                <th>الوقت</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bookings-table">
+                            <tr>
+                                <td>قاعة الملكية</td>
+                                <td>شهاب بندر</td>
+                                <td>2024-06-10</td>
+                                <td>07:00 مساءً</td>
+                                <td><span class="status confirmed">مؤكد</span></td>
+                                <td>
+                                    <button class="btn secondary btn-sm"><i class="fas fa-eye"></i></button>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>قاعة النخبة</td>
+                                <td>محمد علي</td>
+                                <td>2024-06-15</td>
+                                <td>08:00 مساءً</td>
+                                <td><span class="status pending">قيد الانتظار</span></td>
+                                <td>
+                                    <button class="btn secondary btn-sm"><i class="fas fa-eye"></i></button>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <!-- إدارة المستخدمين -->
+                <section class="admin-section users-section">
+                    <h2>إدارة المستخدمين</h2>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الدور</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table">
+                            <tr>
+                                <td>شهاب بندر</td>
+                                <td>banshihab2025@halls.com</td>
+                                <td>مدير</td>
+                                <td><span class="status active">نشط</span></td>
+                                <td>
+                                    <button class="btn secondary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>محمد علي</td>
+                                <td>mohamed@halls.com</td>
+                                <td>مستخدم</td>
+                                <td><span class="status inactive">غير نشط</span></td>
+                                <td>
+                                    <button class="btn secondary btn-sm"><i class="fas fa-edit"></i></button>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <!-- إدارة المراجعات -->
+                <section class="admin-section reviews-section">
+                    <h2>إدارة المراجعات</h2>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>المستخدم</th>
+                                <th>القاعة</th>
+                                <th>التقييم</th>
+                                <th>المراجعة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reviews-table">
+                            <tr>
+                                <td>شهاب بندر</td>
+                                <td>قاعة الملكية</td>
+                                <td>5</td>
+                                <td>قاعة ممتازة وخدمة رائعة</td>
+                                <td>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>محمد علي</td>
+                                <td>قاعة النخبة</td>
+                                <td>4</td>
+                                <td>جيدة لكن تحتاج تحسين الصوت</td>
+                                <td>
+                                    <button class="btn danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <!-- الإعدادات -->
+                <section class="admin-section settings-section">
+                    <h2>الإعدادات</h2>
+                    <form class="admin-settings-form">
+                        <div class="form-group">
+                            <label>اسم الموقع</label>
+                            <input type="text" value="حجز قاعات الأفراح">
+                        </div>
+                        <div class="form-group">
+                            <label>البريد الإلكتروني للدعم</label>
+                            <input type="email" value="support@halls.com">
+                        </div>
+                        <div class="form-group">
+                            <label>تغيير كلمة المرور</label>
+                            <input type="password" placeholder="كلمة المرور الجديدة">
+                        </div>
+                        <button class="btn primary" type="submit">حفظ الإعدادات</button>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Section switching logic
+        document.querySelectorAll('.nav-item[data-section]').forEach(function(item) {
+            item.addEventListener('click', function() {
+                // Remove active from all nav items
+                document.querySelectorAll('.nav-item').forEach(function(nav) {
+                    nav.classList.remove('active');
+                });
+                // Add active to clicked nav
+                this.classList.add('active');
+                // Hide all sections
+                document.querySelectorAll('.admin-section').forEach(function(section) {
+                    section.classList.remove('active');
+                });
+                // Show the selected section
+                var sectionClass = '.' + this.getAttribute('data-section') + '-section';
+                var section = document.querySelector(sectionClass);
+                if (section) {
+                    section.classList.add('active');
+                }
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Chart) {
+            var ctx = document.getElementById('dashboardChart').getContext('2d');
+            new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels: ['القاعات', 'الحجوزات', 'المستخدمون', 'المراجعات'],
+            datasets: [{
+            label: 'الإحصائيات',
+            data: [
+            parseInt(document.getElementById('total-halls').textContent),
+            parseInt(document.getElementById('total-bookings').textContent),
+            parseInt(document.getElementById('total-users').textContent),
+            parseInt(document.getElementById('total-reviews').textContent)
+            ],
+            backgroundColor: [
+            '#1976d2',
+            '#63a4ff',
+            '#004ba0',
+            '#263238'
+            ]
+            }]
+            },
+            options: {
+            responsive: true,
+            plugins: {
+            legend: { display: false }
+            },
+            scales: {
+            y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+            }
+            }
+            }
+            });
+            }
+        });
+    
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

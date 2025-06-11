@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز قاعات الأفراح</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- شاشة التحميل الأولية -->
+    <div class="screen splash-screen active">
+        <div class="logo">
+            <i class="fas fa-house"></i>
+            <h1>مش داري ايش اسمية</h1>
+        </div>
+        <div class="loading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <!-- شاشة تسجيل الدخول -->    <div class="screen login-screen">
+        <div class="header">
+            <h2>تسجيل الدخول</h2>
+        </div>
+        <div class="login-form">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" placeholder="البريد الإلكتروني" id="login-email">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="كلمة المرور" id="login-password">
+            </div>
+            <button class="btn primary" id="login-btn">تسجيل الدخول</button>
+            <div class="or-divider">
+                <span>أو</span>
+            </div>
+            <button class="btn google-btn" id="google-login-btn">
+                <i class="fab fa-google"></i>
+                تسجيل الدخول باستخدام Google
+            </button>
+            <p class="register-link">ليس لديك حساب؟ <a href="#" id="register-link">سجل الآن</a></p>
+            <p class="register-link"><a href="admin.html">التسجيل ك ادمن</a></p>
+        </div>
+    </div>
+
+    
+    <div class="screen register-screen">
+        <div class="header">
+            <h2>إنشاء حساب جديد</h2>
+        </div>
+        <div class="register-form">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" placeholder="الاسم الكامل" id="register-name">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" placeholder="البريد الإلكتروني" id="register-email">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="كلمة المرور" id="register-password">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="تأكيد كلمة المرور" id="register-confirm-password">
+            </div>
+            <button class="btn primary" id="register-btn">إنشاء حساب</button>
+            <p class="login-link">لديك حساب بالفعل؟ <a href="#" id="login-link">تسجيل الدخول</a></p>
+        </div>
+    </div>
+
+    <!-- الشاشة الرئيسية -->
+    <div class="screen home-screen">
+        <div class="app-header">
+            <div class="location-selector" id="location-selector">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="current-location">صنعاء</span>
+                <i class="fas fa-chevron-down"></i>
+                <div class="location-dropdown" id="location-dropdown" style="display: none; position: absolute; right: 0; top: 100%; min-width: 120px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; z-index: 100;">
+                    <div class="location-option" data-location="صنعاء">صنعاء</div>
+                    <div class="location-option" data-location="عدن">عدن</div>
+                    <div class="location-option" data-location="الحديدة">الحديدة</div>
+                    <div class="location-option" data-location="تعز">تعز</div>
+                </div>
+            </div>
+
+            <div class="user-avatar" id="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="ابحث عن قاعة..." id="search-input">
+            <i class="fas fa-search"></i>
+        </div>
+        
+        <div class="categories" id="categories">
+            <div class="category active" data-category="all">الكل</div>
+            <div class="category" data-category="luxury">فاخرة</div>
+            <div class="category" data-category="economy">اقتصادية</div>
+        </div>
+        
+        <div class="halls-list" id="halls-list">
+            
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-item active" data-screen="home">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </div>
+            <div class="nav-item" data-screen="favorites">
+                <i class="fas fa-heart"></i>
+                <span>المفضلة</span>
+            </div>
+            <div class="nav-item" data-screen="bookings">
+                <i class="fas fa-calendar-alt"></i>
+                <span>الحجوزات</span>
+            </div>
+            <div class="nav-item" data-screen="profile">
+                <i class="fas fa-user"></i>
+                <span>حسابي</span>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="screen hall-details-screen">
+        <div class="details-header">
+            <div class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <div class="actions">
+                <i class="far fa-heart" id="favorite-btn"></i>
+                <i class="fas fa-share-alt"></i>
+            </div>
+        </div>
+        
+        <div class="hall-gallery">
+            <div class="main-image">
+                <img id="main-hall-image" src="" alt="Hall Image">
+            </div>
+            <div class="thumbnails" id="thumbnails">
+                <!-- سيتم ملؤها بالبيانات من JavaScript -->
+            </div>
+        </div>
+        
+        <div class="hall-info">
+            <h2 class="hall-name" id="hall-name">قاعة الأفراح الملكية</h2>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span id="hall-rating">4.5 (120 تقييم)</span>
+            </div>
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="hall-location">حي النخيل، الرياض</span>
+            </div>
+            <div class="price">
+                <span class="amount" id="hall-price">1,500 ر.س</span>
+                <span class="per-night">ليلة واحدة</span>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="details">التفاصيل</div>
+            <div class="tab" data-tab="services">الخدمات</div>
+            <div class="tab" data-tab="reviews">المراجعات</div>
+        </div>
+        
+        <div class="tab-content">
+            <div class="tab-pane active" id="details-tab">
+                <p id="hall-description">قاعة فاخرة بمساحة 500 متر مربع، تتسع لـ 300 شخص. تحتوي على ديكورات حديثة، إضاءة متطورة، نظام صوتي احترافي، ومطبخ مجهز.</p>
+                <div class="features" id="hall-features">
+                    <!-- سيتم ملؤها بالبيانات من JavaScript -->
+                </div>
+            </div>
+            <div class="tab-pane" id="services-tab">
+                <ul class="services-list" id="services-list">
+                    <!-- سيتم ملؤها بالبيانات من JavaScript -->
+                </ul>
+            </div>
+            <div class="tab-pane" id="reviews-tab">
+                <div class="reviews-container" id="reviews-container">
+                    <!-- سيتم ملؤها بالبيانات من JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="book-now-btn">
+            <button class="btn primary" id="book-now-btn">احجز الآن</button>
+        </div>
+    </div>
+
+    <!-- شاشة الحجز -->
+    <div class="screen booking-screen">
+        <div class="booking-header">
+            <div class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <h2>إكمال الحجز</h2>
+        </div>
+        
+        <div class="hall-summary">
+            <img id="booking-hall-image" src="" alt="Hall">
+            <div class="summary-info">
+                <h3 id="booking-hall-name">قاعة الأفراح الملكية</h3>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="booking-hall-location">الرياض</span>
+                </div>
+                <div class="price" id="booking-hall-price">1,500 ر.س</div>
+            </div>
+        </div>
+        
+        <div class="booking-form">
+            <h3>تفاصيل الحجز</h3>
+            
+            <div class="form-group">
+                <label>التاريخ</label>
+                <div class="date-picker">
+                    <input type="date" id="booking-date">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>الوقت</label>
+                <div class="time-picker">
+                    <select id="booking-time">
+                        <option value="18:00">06:00 مساءً</option>
+                        <option value="19:00">07:00 مساءً</option>
+                        <option value="20:00">08:00 مساءً</option>
+                        <option value="21:00">09:00 مساءً</option>
+                    </select>
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>عدد الضيوف</label>
+                <div class="guest-counter">
+                    <button class="counter-btn minus">-</button>
+                    <span class="count" id="guest-count">100</span>
+                    <button class="counter-btn plus">+</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>ملاحظات إضافية</label>
+                <textarea id="booking-notes" placeholder="أي متطلبات خاصة..."></textarea>
+            </div>
+        </div>
+        
+        <div class="payment-summary">
+            <h3>ملخص الدفع</h3>
+            <div class="summary-item">
+                <span>سعر القاعة</span>
+                <span id="booking-base-price">1,500 ر.س</span>
+            </div>
+            <div class="summary-item">
+                <span>الضرائب</span>
+                <span id="booking-tax">150 ر.س</span>
+            </div>
+            <div class="summary-item total">
+                <span>المجموع</span>
+                <span id="booking-total">1,650 ر.س</span>
+            </div>
+        </div>
+        
+        <div class="confirm-booking">
+            <button class="btn primary" id="confirm-booking-btn">تأكيد الحجز</button>
+        </div>
+    </div>
+
+    <!-- شاشة المفضلة -->
+    <div class="screen favorites-screen">
+        <div class="app-header">
+            <div class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <h2>القاعات المفضلة</h2>
+        </div>
+        
+        <div class="favorites-list" id="favorites-list">
+            <!-- سيتم ملؤها بالبيانات من JavaScript -->
+        </div>
+    </div>
+
+    <!-- شاشة الحجوزات -->
+    <div class="screen bookings-screen">
+        <div class="app-header">
+            <div class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <h2>حجوزاتي</h2>
+        </div>
+        
+        <div class="bookings-list" id="bookings-list">
+            <!-- سيتم ملؤها بالبيانات من JavaScript -->
+        </div>
+    </div>
+
+    <!-- شاشة الحساب -->
+    <div class="screen profile-screen">
+        <div class="profile-header">
+            <div class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <h2>حسابي</h2>
+        </div>
+        
+        <div class="user-info">
+            <div class="avatar" id="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <h3 id="profile-name">شهاب بندر</h3>
+            <p id="profile-email">banshihab2025@halls.com</p>
+        </div>
+        
+        <div class="profile-menu">
+            <div class="menu-item" id="edit-profile-btn">
+                <i class="fas fa-user-edit"></i>
+                <span>تعديل الملف الشخصي</span>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="menu-item" id="my-bookings-btn">
+                <i class="fas fa-calendar-alt"></i>
+                <span>حجوزاتي</span>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="menu-item" id="my-favorites-btn">
+                <i class="fas fa-heart"></i>
+                <span>المفضلة</span>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="menu-item" id="settings-btn">
+                <i class="fas fa-cog"></i>
+                <span>الإعدادات</span>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="menu-item" id="help-btn">
+                <i class="fas fa-question-circle"></i>
+                <span>المساعدة</span>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="menu-item logout" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة تعديل الملف الشخصي -->
+    <div class="screen edit-profile-screen">
+        <div class="profile-header">
+            <div class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <h2>تعديل الملف الشخصي</h2>
+        </div>
+        
+        <div class="edit-profile-form">
+            <div class="avatar-upload">
+                <div class="avatar-preview" id="avatar-preview">
+                    <i class="fas fa-user"></i>
+                </div>
+                <input type="file" id="avatar-input" accept="image/*">
+                <label for="avatar-input" class="btn secondary">تغيير الصورة</label>
+            </div>
+            
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="edit-profile-name" placeholder="الاسم الكامل">
+            </div>
+            
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="edit-profile-email" placeholder="البريد الإلكتروني">
+            </div>
+            
+            <div class="form-group">
+                <label>كلمة المرور الحالية</label>
+                <input type="password" id="current-password" placeholder="كلمة المرور الحالية">
+            </div>
+            
+            <div class="form-group">
+                <label>كلمة المرور الجديدة</label>
+                <input type="password" id="new-password" placeholder="كلمة المرور الجديدة">
+            </div>
+            
+            <div class="form-group">
+                <label>تأكيد كلمة المرور الجديدة</label>
+                <input type="password" id="confirm-new-password" placeholder="تأكيد كلمة المرور الجديدة">
+            </div>
+            
+            <button class="btn primary" id="save-profile-btn">حفظ التغييرات</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
